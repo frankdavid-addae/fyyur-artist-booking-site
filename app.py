@@ -11,7 +11,6 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from logging import Formatter, FileHandler
-from flask_wtf import Form
 from forms import *
 from flask_migrate import Migrate
 #----------------------------------------------------------------------------#
@@ -30,7 +29,7 @@ migrate = Migrate(app, db)
 #----------------------------------------------------------------------------#
 
 class Venue(db.Model):
-  __tablename__ = 'Venue'
+  __tablename__ = 'venue'
 
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String, nullable=False)
@@ -51,7 +50,7 @@ class Venue(db.Model):
     return f"<Venue id={self.id} name={self.name} city={self.city} state={self.city}> \n"
 
 class Artist(db.Model):
-  __tablename__ = 'Artist'
+  __tablename__ = 'artist'
 
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String, nullable=False)
@@ -68,11 +67,11 @@ class Artist(db.Model):
   shows = db.relationship("Show", backref="artists", lazy=False, cascade="all, delete-orphan")
 
 class Show(db.Model):
-  __tablename__ = "Show"
+  __tablename__ = "show"
 
   id = db.Column(db.Integer, primary_key=True)
-  artist_id = db.Column(db.Integer, db.ForeignKey("Artist.id"), nullable=False)
-  venue_id = db.Column(db.Integer, db.ForeignKey("Venue.id"), nullable=False)
+  artist_id = db.Column(db.Integer, db.ForeignKey("artist.id"), nullable=False)
+  venue_id = db.Column(db.Integer, db.ForeignKey("venue.id"), nullable=False)
   start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
   def __repr__(self):
