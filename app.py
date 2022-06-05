@@ -140,6 +140,9 @@ def venues():
   return render_template('pages/venues.html', areas=data)
 
 
+#  Search Venue
+#  ----------------------------------------------------------------
+
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
   search_term = request.form.get("search_term", "")
@@ -162,6 +165,7 @@ def search_venues():
     response["data"].append(venue_unit)
 
   return render_template('pages/search_venues.html', results=response, search_term=search_term)
+
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
@@ -258,31 +262,6 @@ def delete_venue(venue_id):
 
   return redirect(url_for("index"))
 
-#  Search Venue
-#  ----------------------------------------------------------------
-
-@app.route('/venues/search', methods=['POST'])
-def search_venues():
-  search_term = request.form.get("search_term", "")
-
-  response = {}
-  venues = list(Venue.query.filter(
-    Venue.name.ilike(f"%{search_term}%") |
-    Venue.state.ilike(f"%{search_term}%") |
-    Venue.city.ilike(f"%{search_term}%") 
-  ).all())
-  response["count"] = len(venues)
-  response["data"] = []
-
-  for venue in venues:
-    venue_unit = {
-      "id": venue.id,
-      "name": venue.name,
-      "num_upcoming_shows": len(list(filter(lambda x: x.start_time > datetime.now(), venue.shows)))
-    }
-    response["data"].append(venue_unit)
-
-  return render_template('pages/search_venues.html', results=response, search_term=search_term)
 
 #  Artists
 #  ----------------------------------------------------------------
